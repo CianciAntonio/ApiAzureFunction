@@ -8,12 +8,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Collections.Generic;
-using EntityFrameworkCode;
-using EntityFrameworkCode.Models;
+using EntityFrameworkClassLibrary;
+using EntityFrameworkClassLibrary.Models;
 
 namespace ApiAzureFunction
 {
-    public static class ApiAzureFunction
+    public class ApiAzureFunction
     {
         #region ADD NEW CUSTOMER
         [FunctionName("AddNewCustomer")]
@@ -28,9 +28,9 @@ namespace ApiAzureFunction
 
             using (AppDbContext context = new AppDbContext())
             {
-                context.Customers.Add(newCustomer);
+                await context.Customers.AddAsync(newCustomer);
 
-                context.SaveChanges();
+                await context.SaveChangesAsync();
             }
 
             return new OkObjectResult("Customer Added!");
@@ -50,19 +50,19 @@ namespace ApiAzureFunction
 
             using (AppDbContext context = new AppDbContext())
             {
-                var customer = context.Customers.Find(id);
+                var customer = await context.Customers.FindAsync(id);
 
                 if(customer != null)
                 {
-                    customer.Name = updateCustomer.Nome;
-                    customer.LastName = updateCustomer.Cognome;
+                    customer.Name = updateCustomer.Name;
+                    customer.LastName = updateCustomer.LastName;
                 }
                 else
                 {
                     return new OkObjectResult("Selected ID doesn't exist!");
                 }
 
-                context.SaveChanges();
+                await context.SaveChangesAsync();
             }
 
             return new OkObjectResult("Customer updated!");
@@ -77,7 +77,6 @@ namespace ApiAzureFunction
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            //var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             List<Customer> customerList = new List<Customer>();
 
             using (AppDbContext context = new AppDbContext())
@@ -102,11 +101,9 @@ namespace ApiAzureFunction
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            //var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-
             using (AppDbContext context = new AppDbContext())
             {
-                var customer = context.Customers.Find(id);  
+                var customer = await context.Customers.FindAsync(id);  
 
                 return new OkObjectResult(customer);
             }
@@ -125,14 +122,16 @@ namespace ApiAzureFunction
 
             using (AppDbContext context = new AppDbContext())
             {
-                var customer = context.Customers.Find(id);
+                var customer = await context.Customers.FindAsync(id);
                 context.Customers.Remove(customer);
 
-                context.SaveChanges();
+                await context.SaveChangesAsync();
 
                 return new OkObjectResult("Customer Removed!");
             }
         }
         #endregion
+
+
     }
 }

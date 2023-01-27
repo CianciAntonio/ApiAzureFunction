@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using EntityFrameworkCode.Models;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace EntityFrameworkCode
 {
@@ -17,7 +18,6 @@ namespace EntityFrameworkCode
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }
-        
 
         public virtual DbSet<Customer> Customers { get; set; }
 
