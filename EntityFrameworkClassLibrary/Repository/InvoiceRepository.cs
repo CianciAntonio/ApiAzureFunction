@@ -28,7 +28,7 @@ namespace EntityFrameworkClassLibrary.Repository
 
         public async Task AddInvoice(Invoice invoice)
         {
-            _appDbContext.Invoices.Add(invoice);
+            await _appDbContext.Invoices.AddAsync(invoice);
         }
 
         public async Task RemoveInvoiceById(int id)

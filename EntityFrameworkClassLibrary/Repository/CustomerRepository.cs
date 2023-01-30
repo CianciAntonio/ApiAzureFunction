@@ -26,7 +26,7 @@ namespace EntityFrameworkClassLibrary.Repository
 
         public async Task AddCustomer(Customer customer)
         {
-            _appDbContext.Customers.Add(customer);
+            await _appDbContext.Customers.AddAsync(customer);
         }
 
         public async Task<Customer> UpdateCustomer(Customer customer)

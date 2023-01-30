@@ -43,6 +43,7 @@ namespace ApiFunctionWithRepositoryPattern
         #endregion
 
         #region CONTROLLER (UoW)
+
         #region GET ALL CUSTOMERS
         [FunctionName("GetAllCustomers")]
         public async Task<IActionResult> GetCustomers(
@@ -78,7 +79,7 @@ namespace ApiFunctionWithRepositoryPattern
         #region ADD CUSTOMER
         [FunctionName("AddCustomer")]
         public async Task<IActionResult> AddCustomer(
-            [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
@@ -214,6 +215,7 @@ namespace ApiFunctionWithRepositoryPattern
             return new OkObjectResult("Invoice removed!");
         }
         #endregion
+
         #endregion
 
         #region CUSTOMERS CONTROLLER (NO UoW)

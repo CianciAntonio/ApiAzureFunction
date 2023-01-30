@@ -11,8 +11,8 @@ namespace ApiFunctionWithRepositoryPattern
     {
         public override void Configure(IFunctionsHostBuilder service)
         {
-            service.Services.AddScoped<ICustomerRepository, CustomerRepository>();
-            service.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
+            //service.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+            //service.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
             service.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=EsercizioAPI;" +
