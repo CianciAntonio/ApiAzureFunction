@@ -29,15 +29,12 @@ namespace EntityFrameworkClassLibrary.Repository
         public async Task AddInvoice(Invoice invoice)
         {
             _appDbContext.Invoices.Add(invoice);
-            await _appDbContext.SaveChangesAsync();
         }
 
         public async Task RemoveInvoiceById(int id)
         {
             var dbInvoice = await _appDbContext.Invoices.FindAsync(id);
             _appDbContext.Remove(dbInvoice);
-
-            await _appDbContext.SaveChangesAsync();
         }
 
         public async Task<Invoice> UpdateInvoice(Invoice invoice)
@@ -54,7 +51,6 @@ namespace EntityFrameworkClassLibrary.Repository
             dbInvoice.CustomerId = invoice.CustomerId;
 
             _appDbContext.Invoices.Update(dbInvoice);
-            await _appDbContext.SaveChangesAsync();
 
             return dbInvoice;
         }

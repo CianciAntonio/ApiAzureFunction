@@ -27,7 +27,6 @@ namespace EntityFrameworkClassLibrary.Repository
         public async Task AddCustomer(Customer customer)
         {
             _appDbContext.Customers.Add(customer);
-            await _appDbContext.SaveChangesAsync();
         }
 
         public async Task<Customer> UpdateCustomer(Customer customer)
@@ -41,7 +40,6 @@ namespace EntityFrameworkClassLibrary.Repository
             dbCustomer.LastName = customer.LastName;
 
             _appDbContext.Customers.Update(dbCustomer);
-            await _appDbContext.SaveChangesAsync();
 
             return dbCustomer;
         }
@@ -50,8 +48,6 @@ namespace EntityFrameworkClassLibrary.Repository
         {
             var dbCustomer = await _appDbContext.Customers.FindAsync(id);
             _appDbContext.Remove(dbCustomer);
-
-            await _appDbContext.SaveChangesAsync();
         }
     }
 }
