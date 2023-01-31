@@ -17,13 +17,14 @@ namespace EntityFrameworkClassLibrary
         public virtual DbSet<Invoice> Invoices { get; set; }
 
         #region ONCONFIGURING METHOD (ENABLE when add migration)
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=EsercizioAPI;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
-            }
-        }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    if (!optionsBuilder.IsConfigured)
+        //    {
+        //        string connectionString = Environment.GetEnvironmentVariable("ConnectionString");
+        //        optionsBuilder.UseSqlServer(connectionString);
+        //    }
+        //}
         #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
