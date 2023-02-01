@@ -4,7 +4,7 @@ namespace EntityFrameworkClassLibrary.Repository
 {
     public interface ICustomerRepository : IRepository<Customer>
     {
-        IEnumerable<Customer> GetAllCustomers();
+        Task<IEnumerable<Customer>> GetAllCustomers();
         Task<Customer> GetCustomerById(int id);
         Task AddCustomer(Customer customer);
         Task<Customer> UpdateCustomer(Customer customer);

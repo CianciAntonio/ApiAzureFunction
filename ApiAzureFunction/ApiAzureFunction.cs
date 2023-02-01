@@ -79,7 +79,8 @@ namespace ApiAzureFunction
 
             List<Customer> customerList = new List<Customer>();
 
-            using (AppDbContext context = new AppDbContext())
+            AppDbContext context = new AppDbContext();
+            try
             {
                 var allCustomers = context.Customers;
 
@@ -89,6 +90,10 @@ namespace ApiAzureFunction
                 }
 
                 return new OkObjectResult(customerList);
+            }
+            finally
+            {
+                context.Dispose();
             }
         }
         #endregion

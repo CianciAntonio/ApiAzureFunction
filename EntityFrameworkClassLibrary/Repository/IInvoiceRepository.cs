@@ -9,7 +9,7 @@ namespace EntityFrameworkClassLibrary.Repository
 {
     public interface IInvoiceRepository : IRepository<Invoice>
     {
-        IEnumerable<Invoice> GetAllInvoices();
+        Task<IEnumerable<Invoice>> GetAllInvoices();
         Task<Invoice> GetInvoiceById(int id);
         Task AddInvoice(Invoice invoice);
         Task RemoveInvoiceById(int id);

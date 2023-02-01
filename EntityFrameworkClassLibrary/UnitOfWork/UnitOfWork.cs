@@ -13,12 +13,14 @@ namespace EntityFrameworkClassLibrary.UnitOfWork
         private readonly AppDbContext _appDbContext;
         public IInvoiceRepository invoice { get; set; }
         public ICustomerRepository customer { get; set; }
+        public IProductRepository product { get; set; }
 
         public UnitOfWork(AppDbContext appDbContext)
         {
             _appDbContext = appDbContext;
             invoice = new InvoiceRepository(_appDbContext);
             customer = new CustomerRepository(_appDbContext);
+            product = new ProductRepository(_appDbContext);
         }
 
         public Task Save()

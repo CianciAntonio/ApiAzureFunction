@@ -1,5 +1,7 @@
 ﻿using EntityFrameworkClassLibrary.Models;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using System.Runtime.CompilerServices;
 
 namespace EntityFrameworkClassLibrary.Repository
 {
@@ -12,16 +14,21 @@ namespace EntityFrameworkClassLibrary.Repository
             _appDbContext = context;
         }
 
-        public IEnumerable<Customer> GetAllCustomers()
+        public async Task<IEnumerable<Customer>> GetAllCustomers()
         {
-            var customers = _appDbContext.Customers.Include(y => y.Invoices);
+            var customers = await _appDbContext.Customers
+                .Include(y => y.Invoices)
+                .ThenInclude(x => x.Product)
+                .ToListAsync();
 
-            return customers.ToList();
+            return customers;
         }
 
         public async Task<Customer> GetCustomerById(int id)
         {
-            return await _appDbContext.Customers.FindAsync(id);
+            var customer = await _appDbContext.Customers.Include(y => y.Invoices).FirstOrDefaultAsync(x => x.Id == id);
+
+            return customer;
         }
 
         public async Task AddCustomer(Customer customer)

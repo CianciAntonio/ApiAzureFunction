@@ -11,6 +11,7 @@ namespace EntityFrameworkClassLibrary.UnitOfWork
     {
         ICustomerRepository customer { get; }
         IInvoiceRepository invoice { get; }
+        IProductRepository product { get; }
         Task Save();
         void Dispose();
     }

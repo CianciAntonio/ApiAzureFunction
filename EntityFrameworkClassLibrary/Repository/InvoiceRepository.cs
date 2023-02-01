@@ -1,4 +1,5 @@
 ﻿using EntityFrameworkClassLibrary.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,9 +17,13 @@ namespace EntityFrameworkClassLibrary.Repository
             _appDbContext = context;
         }
 
-        public IEnumerable<Invoice> GetAllInvoices()
+        public async Task<IEnumerable<Invoice>> GetAllInvoices()
         {
-            return _appDbContext.Invoices.ToList();
+            var invoice = await _appDbContext.Invoices
+                .Include(y => y.Customer)
+                .ToListAsync();
+
+            return invoice;
         }
 
         public async Task<Invoice> GetInvoiceById(int id)

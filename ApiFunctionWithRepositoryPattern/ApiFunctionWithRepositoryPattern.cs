@@ -33,53 +33,45 @@ namespace ApiFunctionWithRepositoryPattern
         //}
         #endregion
 
-        #region DEPENDENCY INJECTION (UoW)
         private readonly IUnitOfWork _unitOfWork;
 
         public ApiFunctionWithRepositoryPattern(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
-        #endregion
 
-        #region CONTROLLER (UoW)
 
-        #region GET ALL CUSTOMERS
         [FunctionName("GetAllCustomers")]
         public async Task<IActionResult> GetCustomers(
-            [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            var customers = _unitOfWork.customer.GetAllCustomers();
+            var customers = await _unitOfWork.customer.GetAllCustomers();
             await _unitOfWork.Save();
             _unitOfWork.Dispose();
 
             return new OkObjectResult(customers);
         }
-        #endregion
 
-        #region GET CUSTOMER BY ID
         [FunctionName("GetCustomerById")]
         public async Task<IActionResult> GetCustomerById(
-            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "GetCustomerById/{id}")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "GetCustomerById/{id}")] HttpRequest req,
             ILogger log, int id)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            var customers = _unitOfWork.customer.GetCustomerById(id);
+            var customers = await _unitOfWork.customer.GetCustomerById(id);
             await _unitOfWork.Save();
             _unitOfWork.Dispose();
 
             return new OkObjectResult(customers);
         }
-        #endregion
 
-        #region ADD CUSTOMER
         [FunctionName("AddCustomer")]
         public async Task<IActionResult> AddCustomer(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
@@ -93,12 +85,10 @@ namespace ApiFunctionWithRepositoryPattern
 
             return new OkObjectResult("Customer Added!");
         }
-        #endregion
 
-        #region UPDATE CUSTOMER
         [FunctionName("UpdateCustomer")]
         public async Task<IActionResult> UpdateCustomer(
-            [HttpTrigger(AuthorizationLevel.Function, "put", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = null)] HttpRequest req,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
@@ -112,12 +102,10 @@ namespace ApiFunctionWithRepositoryPattern
 
             return new OkObjectResult("Customer updated!");
         }
-        #endregion
 
-        #region DELETE CUSTOMER BY ID
         [FunctionName("DeleteCustomerById")]
         public async Task<IActionResult> DeleteCustomerById(
-            [HttpTrigger(AuthorizationLevel.Function, "delete", Route = "DeleteCustomerById/{id}")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "DeleteCustomerById/{id}")] HttpRequest req,
             ILogger log, int id)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
@@ -128,28 +116,24 @@ namespace ApiFunctionWithRepositoryPattern
 
             return new OkObjectResult("Customer removed!");
         }
-        #endregion
 
-        #region GET ALL INVOICES
         [FunctionName("GetAllInvoices")]
         public async Task<IActionResult> GetAllInvoices(
-            [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            var invoices = _unitOfWork.invoice.GetAllInvoices();
+            var invoices = await _unitOfWork.invoice.GetAllInvoices();
             await _unitOfWork.Save();
             _unitOfWork.Dispose();
 
             return new OkObjectResult(invoices);
         }
-        #endregion
 
-        #region GET INVOICE BY ID
         [FunctionName("GetInvoiceById")]
         public async Task<IActionResult> GetInvoiceById(
-            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "GetInvoiceById/{id}")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "GetInvoiceById/{id}")] HttpRequest req,
             ILogger log, int id)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
@@ -160,12 +144,10 @@ namespace ApiFunctionWithRepositoryPattern
 
             return new OkObjectResult(invoice);
         }
-        #endregion
 
-        #region ADD INVOICE
         [FunctionName("AddInvoice")]
         public async Task<IActionResult> AddInvoice(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
@@ -179,12 +161,10 @@ namespace ApiFunctionWithRepositoryPattern
 
             return new OkObjectResult("Invoice added!");
         }
-        #endregion
 
-        #region UPDATE INVOICE
         [FunctionName("UpdateInvoice")]
         public async Task<IActionResult> UpdateInvoice(
-            [HttpTrigger(AuthorizationLevel.Function, "put", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = null)] HttpRequest req,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
@@ -198,12 +178,10 @@ namespace ApiFunctionWithRepositoryPattern
 
             return new OkObjectResult("Invoice updated!");
         }
-        #endregion
 
-        #region DELETE INVOICE BY ID
         [FunctionName("DeleteInvoiceById")]
         public async Task<IActionResult> DeleteInvoiceById(
-            [HttpTrigger(AuthorizationLevel.Function, "delete", Route = "DeleteInvoiceById/{id}")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "DeleteInvoiceById/{id}")] HttpRequest req,
             ILogger log, int id)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
@@ -214,11 +192,25 @@ namespace ApiFunctionWithRepositoryPattern
 
             return new OkObjectResult("Invoice removed!");
         }
-        #endregion
 
-        #endregion
+        [FunctionName("AddProduct")]
+        public async Task<IActionResult> AddProduct(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req,
+            ILogger log)
+        {
+            log.LogInformation("C# HTTP trigger function processed a request.");
 
-        #region CUSTOMERS CONTROLLER (NO UoW)
+            var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            dynamic newProduct = JsonConvert.DeserializeObject<Product>(requestBody);
+
+            await _unitOfWork.product.AddProduct(newProduct);
+            await _unitOfWork.Save();
+            _unitOfWork.Dispose();
+
+            return new OkObjectResult("Product added!");
+        }
+
+        #region CONTROLLER (NO UoW)
         //#region GET ALL CUSTOMERS
         //[FunctionName("GetAllCustomers")]
         //public async Task<IActionResult> GetAllCustomers(
@@ -294,9 +286,7 @@ namespace ApiFunctionWithRepositoryPattern
         //    return new OkObjectResult("Customer removed!");
         //}
         //#endregion
-        #endregion
 
-        #region INVOICES CONTROLLER (NO UoW)
         //#region GET ALL INVOICES
         //[FunctionName("GetAllInvoices")]
         //public async Task<IActionResult> GetAllInvoices(
@@ -334,9 +324,9 @@ namespace ApiFunctionWithRepositoryPattern
         //    log.LogInformation("C# HTTP trigger function processed a request.");
 
         //    var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-        //    dynamic newInvoice = JsonConvert.DeserializeObject<Invoice>(requestBody);
+        //    dynamic newProduct = JsonConvert.DeserializeObject<Invoice>(requestBody);
 
-        //    await _invoiceRepo.AddInvoice(newInvoice);
+        //    await _invoiceRepo.AddInvoice(newProduct);
 
         //    return new OkObjectResult("Invoice added!");
         //}
@@ -351,9 +341,9 @@ namespace ApiFunctionWithRepositoryPattern
         //    log.LogInformation("C# HTTP trigger function processed a request.");
 
         //    var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-        //    dynamic newInvoice = JsonConvert.DeserializeObject<Invoice>(requestBody);
+        //    dynamic newProduct = JsonConvert.DeserializeObject<Invoice>(requestBody);
 
-        //    await _invoiceRepo.UpdateInvoice(newInvoice);
+        //    await _invoiceRepo.UpdateInvoice(newProduct);
 
         //    return new OkObjectResult("Invoice updated!");
         //}

@@ -15,7 +15,7 @@ namespace EntityFrameworkClassLibrary.Models
         public string Description { get; set; }
         public int CustomerId { get; set; }
 
-        [Newtonsoft.Json.JsonIgnore]
+        public Product Product { get; set; }
         public Customer Customer { get; set; }
     }
 }
