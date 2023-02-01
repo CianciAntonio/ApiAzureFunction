@@ -52,7 +52,6 @@ namespace EntityFrameworkClassLibrary.Repository
             dbInvoice.OrderDate = invoice.OrderDate;
             dbInvoice.Quantity = invoice.Quantity;
             dbInvoice.Price = invoice.Price;
-            dbInvoice.Description = invoice.Description;
             dbInvoice.CustomerId = invoice.CustomerId;
 
             _appDbContext.Invoices.Update(dbInvoice);

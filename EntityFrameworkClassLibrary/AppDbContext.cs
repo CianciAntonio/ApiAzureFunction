@@ -46,7 +46,6 @@ namespace EntityFrameworkClassLibrary
                 entity.Property(e => e.OrderDate).HasMaxLength(11);
                 entity.Property(e => e.Quantity).HasColumnType("int");
                 entity.Property(e => e.Price).HasColumnType("decimal");
-                entity.Property(e => e.Description).HasMaxLength(50);
                 entity.Property(e => e.CustomerId).HasColumnType("int");
             });
 
