@@ -1,10 +1,4 @@
 ﻿using EntityFrameworkClassLibrary.Repository;
-using EntityFrameworkClassLibrary.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EntityFrameworkClassLibrary.UnitOfWork
 {
@@ -24,12 +18,15 @@ namespace EntityFrameworkClassLibrary.UnitOfWork
         }
 
         //Non è consigliabile salvare le modifiche nelle repository, meglio creare il metodo nella unitofwork e richiamarlo nella funzione
+        //Questo perchè viola il principio di separazione delle responsabilità. La repository è responsabile della gestione delle entità,
+        //mentre l'Unit of Work è responsabile della gestione delle transazioni e delle modifiche apportate alle entità.
         public Task Save()
         {
             return _appDbContext.SaveChangesAsync();
         }
 
-        //Permette di liberare risorse
+        //Permette di liberare risorse gestite (esempio connessioni al database) che sono state allocate durante l'utilizzo del contesto.
+        //Questo aiuta a prevenire eventuali perdite di memoria o problemi di prestazioni
         public async void Dispose()
         {
             await _appDbContext.DisposeAsync();

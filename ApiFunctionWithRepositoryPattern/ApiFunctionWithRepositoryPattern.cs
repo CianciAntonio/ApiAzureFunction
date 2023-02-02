@@ -42,7 +42,6 @@ namespace ApiFunctionWithRepositoryPattern
             _unitOfWork = unitOfWork;
         }
 
-
         [FunctionName("GetAllCustomers")]
         public async Task<IActionResult> GetCustomers(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
