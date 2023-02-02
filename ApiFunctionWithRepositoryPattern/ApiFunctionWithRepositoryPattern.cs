@@ -41,7 +41,7 @@ namespace ApiFunctionWithRepositoryPattern
 
         [FunctionName("GetCustomerById")]
         public async Task<IActionResult> GetCustomerById(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "GetCustomerById{id}")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "GetCustomerById/{id}")] HttpRequest req,
             ILogger log, int id)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
