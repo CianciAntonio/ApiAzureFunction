@@ -5,6 +5,8 @@ namespace EntityFrameworkClassLibrary
 {
     public partial class AppDbContext : DbContext
     {
+        //Costruttore vuoto necessario poiché quando lancio migrazione, trovandomi in una class library esterna alla azure function,
+        //non ho un oggetto di configurazione da passare
         public AppDbContext()
         {
         }
@@ -13,10 +15,13 @@ namespace EntityFrameworkClassLibrary
         {
         }
 
+        //Costruzione delle Tabelle del Database
         public virtual DbSet<Customer> Customers { get; set; }
         public virtual DbSet<Invoice> Invoices { get; set; }
         public virtual DbSet<Product> Product { get; set; }
 
+        //Meteodo attraverso il quale definisco connection string per connessione al database
+        //(Da capire perchè non la prende con GetEnvironementVariable, ma devo passarla esplicita per far funzionare migrazione)
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -26,6 +31,7 @@ namespace EntityFrameworkClassLibrary
             }
         }
 
+        //Creazione del modello di relazione tra le tabelle del database
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Customer>(entity =>

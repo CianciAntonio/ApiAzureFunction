@@ -16,6 +16,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Linq;
 
+//Attributo in cui dico alla funzione di caricare la classe Startup all'avvio del programma
 [assembly: FunctionsStartup(typeof(ApiFunctionWithRepositoryPattern.StartUp))]
 
 namespace ApiFunctionWithRepositoryPattern
@@ -33,6 +34,7 @@ namespace ApiFunctionWithRepositoryPattern
         //}
         #endregion
 
+        //Dependency Injection della UnitOfWork
         private readonly IUnitOfWork _unitOfWork;
 
         public ApiFunctionWithRepositoryPattern(IUnitOfWork unitOfWork)
@@ -49,7 +51,6 @@ namespace ApiFunctionWithRepositoryPattern
             log.LogInformation("C# HTTP trigger function processed a request.");
 
             var customers = await _unitOfWork.customer.GetAllCustomers();
-            await _unitOfWork.Save();
             _unitOfWork.Dispose();
 
             return new OkObjectResult(customers);
@@ -63,7 +64,6 @@ namespace ApiFunctionWithRepositoryPattern
             log.LogInformation("C# HTTP trigger function processed a request.");
 
             var customers = await _unitOfWork.customer.GetCustomerById(id);
-            await _unitOfWork.Save();
             _unitOfWork.Dispose();
 
             return new OkObjectResult(customers);
@@ -125,7 +125,6 @@ namespace ApiFunctionWithRepositoryPattern
             log.LogInformation("C# HTTP trigger function processed a request.");
 
             var invoices = await _unitOfWork.invoice.GetAllInvoices();
-            await _unitOfWork.Save();
             _unitOfWork.Dispose();
 
             return new OkObjectResult(invoices);
@@ -139,7 +138,6 @@ namespace ApiFunctionWithRepositoryPattern
             log.LogInformation("C# HTTP trigger function processed a request.");
 
             var invoice = await _unitOfWork.invoice.GetInvoiceById(id);
-            await _unitOfWork.Save();
             _unitOfWork.Dispose();
 
             return new OkObjectResult(invoice);

@@ -23,11 +23,13 @@ namespace EntityFrameworkClassLibrary.UnitOfWork
             product = new ProductRepository(_appDbContext);
         }
 
+        //Non è consigliabile salvare le modifiche nelle repository, meglio creare il metodo nella unitofwork e richiamarlo nella funzione
         public Task Save()
         {
             return _appDbContext.SaveChangesAsync();
         }
 
+        //Permette di liberare risorse
         public async void Dispose()
         {
             await _appDbContext.DisposeAsync();

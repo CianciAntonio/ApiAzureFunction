@@ -44,7 +44,7 @@ namespace EntityFrameworkClassLibrary.Repository
             Customer? dbCustomer = await _appDbContext.Customers.FindAsync(customer.Id);
 
             if (dbCustomer == null)
-                return "Id Not Found"; ;
+                return "Id Not Found";
 
             dbCustomer.Name = customer.Name;
             dbCustomer.LastName = customer.LastName;
