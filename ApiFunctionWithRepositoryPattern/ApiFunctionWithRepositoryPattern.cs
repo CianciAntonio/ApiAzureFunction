@@ -18,17 +18,6 @@ namespace ApiFunctionWithRepositoryPattern
 { 
     public class ApiFunctionWithRepositoryPattern
     {
-        #region DEPENDENCY INJECTION (NO UoW)
-        //private ICustomerRepository _customerRepo;
-        //private IInvoiceRepository _invoiceRepo;
-
-        //public ApiFunctionWithRepositoryPattern(ICustomerRepository customerRepo, IInvoiceRepository invoiceRepo)
-        //{
-        //    _customerRepo = customerRepo;
-        //    _invoiceRepo = invoiceRepo;
-        //}
-        #endregion
-
         //Dependency Injection della UnitOfWork
         private readonly IUnitOfWork _unitOfWork;
 
@@ -52,7 +41,7 @@ namespace ApiFunctionWithRepositoryPattern
 
         [FunctionName("GetCustomerById")]
         public async Task<IActionResult> GetCustomerById(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "GetCustomerById/{id}")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "GetCustomerById{id}")] HttpRequest req,
             ILogger log, int id)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
@@ -216,6 +205,16 @@ namespace ApiFunctionWithRepositoryPattern
             return new OkObjectResult(message);
         }
 
+        #region DEPENDENCY INJECTION (NO UoW)
+        //private ICustomerRepository _customerRepo;
+        //private IInvoiceRepository _invoiceRepo;
+
+        //public ApiFunctionWithRepositoryPattern(ICustomerRepository customerRepo, IInvoiceRepository invoiceRepo)
+        //{
+        //    _customerRepo = customerRepo;
+        //    _invoiceRepo = invoiceRepo;
+        //}
+        #endregion
         #region CONTROLLER (NO UoW)
         //#region GET ALL CUSTOMERS
         //[FunctionName("GetAllCustomers")]

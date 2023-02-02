@@ -22,9 +22,9 @@ namespace EntityFrameworkClassLibrary.Repository
             return invoice;
         }
 
-        public async Task<Invoice?> GetInvoiceById(int id)
+        public async Task<Invoice> GetInvoiceById(int id)
         {
-            Invoice? invoice = await _appDbContext.Invoices
+            Invoice invoice = await _appDbContext.Invoices
                 .Include(y => y.Customer)
                 .Include(x => x.Product)
                 .FirstOrDefaultAsync(x => x.Id == id);
@@ -53,7 +53,7 @@ namespace EntityFrameworkClassLibrary.Repository
 
         public async Task<string> UpdateInvoice(Invoice invoice)
         {
-            Invoice? dbInvoice = await _appDbContext.Invoices.FindAsync(invoice.Id);
+            Invoice dbInvoice = await _appDbContext.Invoices.FindAsync(invoice.Id);
 
             if (dbInvoice == null)
                 return "Id Not Found";
