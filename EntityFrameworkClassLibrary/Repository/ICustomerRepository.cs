@@ -7,7 +7,7 @@ namespace EntityFrameworkClassLibrary.Repository
         Task<IEnumerable<Customer>> GetAllCustomers();
         Task<Customer> GetCustomerById(int id);
         Task AddCustomer(Customer customer);
-        Task<Customer> UpdateCustomer(Customer customer);
-        Task RemoveCostomerById(int id);
+        Task<string> UpdateCustomer(Customer customer);
+        Task<string> RemoveCostomerById(int id);
     }
 }

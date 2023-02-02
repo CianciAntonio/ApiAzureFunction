@@ -96,11 +96,11 @@ namespace ApiFunctionWithRepositoryPattern
             var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic newCustomer = JsonConvert.DeserializeObject<Customer>(requestBody);
 
-            await _unitOfWork.customer.UpdateCustomer(newCustomer);
+            string message = await _unitOfWork.customer.UpdateCustomer(newCustomer);
             await _unitOfWork.Save();
             _unitOfWork.Dispose();
 
-            return new OkObjectResult("Customer updated!");
+            return new OkObjectResult(message);
         }
 
         [FunctionName("DeleteCustomerById")]
@@ -110,11 +110,11 @@ namespace ApiFunctionWithRepositoryPattern
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            await _unitOfWork.customer.RemoveCostomerById(id);
+            string message = await _unitOfWork.customer.RemoveCostomerById(id);
             await _unitOfWork.Save();
             _unitOfWork.Dispose();
 
-            return new OkObjectResult("Customer removed!");
+            return new OkObjectResult(message);
         }
 
         [FunctionName("GetAllInvoices")]
@@ -172,11 +172,11 @@ namespace ApiFunctionWithRepositoryPattern
             var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic newInvoice = JsonConvert.DeserializeObject<Invoice>(requestBody);
 
-            await _unitOfWork.invoice.UpdateInvoice(newInvoice);
+            string message = await _unitOfWork.invoice.UpdateInvoice(newInvoice);
             await _unitOfWork.Save();
             _unitOfWork.Dispose();
 
-            return new OkObjectResult("Invoice updated!");
+            return new OkObjectResult(message);
         }
 
         [FunctionName("DeleteInvoiceById")]
@@ -186,11 +186,11 @@ namespace ApiFunctionWithRepositoryPattern
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            await _unitOfWork.invoice.RemoveInvoiceById(id);
+            string message = await _unitOfWork.invoice.RemoveInvoiceById(id);
             await _unitOfWork.Save();
             _unitOfWork.Dispose();
 
-            return new OkObjectResult("Invoice removed!");
+            return new OkObjectResult(message);
         }
 
         [FunctionName("AddProduct")]
@@ -208,6 +208,20 @@ namespace ApiFunctionWithRepositoryPattern
             _unitOfWork.Dispose();
 
             return new OkObjectResult("Product added!");
+        }
+
+        [FunctionName("DeleteProductById")]
+        public async Task<IActionResult> DeleteProductById(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "DeleteProductById/{id}")] HttpRequest req,
+            ILogger log, int id)
+        {
+            log.LogInformation("C# HTTP trigger function processed a request.");
+
+            string message = await _unitOfWork.product.RemoveProductById(id);
+            await _unitOfWork.Save();
+            _unitOfWork.Dispose();
+
+            return new OkObjectResult(message);
         }
 
         #region CONTROLLER (NO UoW)

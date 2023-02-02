@@ -36,27 +36,30 @@ namespace EntityFrameworkClassLibrary.Repository
             await _appDbContext.Invoices.AddAsync(invoice);
         }
 
-        public async Task RemoveInvoiceById(int id)
+        public async Task<string> RemoveInvoiceById(int id)
         {
             var dbInvoice = await _appDbContext.Invoices.FindAsync(id);
+
+            if (dbInvoice == null)
+                return "Id Not Found!";
+
             _appDbContext.Remove(dbInvoice);
+            return "Invoice Removed!";
         }
 
-        public async Task<Invoice> UpdateInvoice(Invoice invoice)
+        public async Task<string> UpdateInvoice(Invoice invoice)
         {
             Invoice? dbInvoice = await _appDbContext.Invoices.FindAsync(invoice.Id);
 
             if (dbInvoice == null)
-                return null;
+                return "Id Not Found";
 
             dbInvoice.OrderDate = invoice.OrderDate;
             dbInvoice.Quantity = invoice.Quantity;
             dbInvoice.Price = invoice.Price;
             dbInvoice.CustomerId = invoice.CustomerId;
-
             _appDbContext.Invoices.Update(dbInvoice);
-
-            return dbInvoice;
+            return "Invoice Updated";
         }
     }
 }

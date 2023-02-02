@@ -26,7 +26,10 @@ namespace EntityFrameworkClassLibrary.Repository
 
         public async Task<Customer> GetCustomerById(int id)
         {
-            var customer = await _appDbContext.Customers.Include(y => y.Invoices).FirstOrDefaultAsync(x => x.Id == id);
+            Customer? customer = await _appDbContext.Customers
+                .Include(y => y.Invoices)
+                .ThenInclude(x => x.Product)
+                .FirstOrDefaultAsync(x => x.Id == id);
 
             return customer;
         }
@@ -36,25 +39,28 @@ namespace EntityFrameworkClassLibrary.Repository
             await _appDbContext.Customers.AddAsync(customer);
         }
 
-        public async Task<Customer> UpdateCustomer(Customer customer)
+        public async Task<string> UpdateCustomer(Customer customer)
         {
             Customer? dbCustomer = await _appDbContext.Customers.FindAsync(customer.Id);
 
             if (dbCustomer == null)
-                return null;
+                return "Id Not Found"; ;
 
             dbCustomer.Name = customer.Name;
             dbCustomer.LastName = customer.LastName;
-
             _appDbContext.Customers.Update(dbCustomer);
-
-            return dbCustomer;
+            return "Customer Updated!";
         }
 
-        public async Task RemoveCostomerById(int id)
+        public async Task<string> RemoveCostomerById(int id)
         {
             var dbCustomer = await _appDbContext.Customers.FindAsync(id);
+
+            if (dbCustomer == null)
+                return "Id Not Found";
+
             _appDbContext.Remove(dbCustomer);
+            return "Customer Removed!";
         }
     }
 }
