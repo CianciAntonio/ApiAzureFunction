@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -11,13 +10,9 @@ using EntityFrameworkClassLibrary.Models;
 using EntityFrameworkClassLibrary.Repository;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using EntityFrameworkClassLibrary.UnitOfWork;
-using EntityFrameworkClassLibrary;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.Linq;
 
 //Attributo in cui dico alla funzione di caricare la classe Startup all'avvio del programma
-[assembly: FunctionsStartup(typeof(ApiFunctionWithRepositoryPattern.StartUp))]
+[assembly: FunctionsStartup(typeof(ApiFunctionWithRepositoryPattern.Startup))]
 
 namespace ApiFunctionWithRepositoryPattern
 { 

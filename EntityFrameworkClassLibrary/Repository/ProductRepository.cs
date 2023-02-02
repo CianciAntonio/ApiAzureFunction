@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EntityFrameworkClassLibrary.Models;
+﻿using EntityFrameworkClassLibrary.Models;
 
 namespace EntityFrameworkClassLibrary.Repository
 {
@@ -27,7 +22,7 @@ namespace EntityFrameworkClassLibrary.Repository
 
             if (dbProduct == null)
                 return "Id Not Found";
-
+                                    
             _appDbContext.Remove(dbProduct);
             return "Customer Removed!";
         }

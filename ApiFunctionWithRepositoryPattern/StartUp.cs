@@ -6,11 +6,11 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Text.Json.Serialization;
 
-[assembly: FunctionsStartup(typeof(ApiFunctionWithRepositoryPattern.StartUp))]
+[assembly: FunctionsStartup(typeof(ApiFunctionWithRepositoryPattern.Startup))]
 
 namespace ApiFunctionWithRepositoryPattern
 {
-    public class StartUp : FunctionsStartup
+    public class Startup : FunctionsStartup
     {  
         public override void Configure(IFunctionsHostBuilder service)
         {

@@ -1,7 +1,5 @@
 ﻿using EntityFrameworkClassLibrary.Models;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using System.Runtime.CompilerServices;
 
 namespace EntityFrameworkClassLibrary.Repository
 {
@@ -24,12 +22,15 @@ namespace EntityFrameworkClassLibrary.Repository
             return customers;
         }
 
-        public async Task<Customer> GetCustomerById(int id)
+        public async Task<Customer?> GetCustomerById(int id)
         {
             Customer? customer = await _appDbContext.Customers
                 .Include(y => y.Invoices)
                 .ThenInclude(x => x.Product)
                 .FirstOrDefaultAsync(x => x.Id == id);
+
+            if(customer == null)
+                return null;
 
             return customer;
         }

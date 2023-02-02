@@ -1,10 +1,5 @@
 ﻿using EntityFrameworkClassLibrary.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EntityFrameworkClassLibrary.Repository
 {
@@ -21,14 +16,23 @@ namespace EntityFrameworkClassLibrary.Repository
         {
             var invoice = await _appDbContext.Invoices
                 .Include(y => y.Customer)
+                .Include(x => x.Product)
                 .ToListAsync();
 
             return invoice;
         }
 
-        public async Task<Invoice> GetInvoiceById(int id)
+        public async Task<Invoice?> GetInvoiceById(int id)
         {
-            return await _appDbContext.Invoices.FindAsync(id);
+            Invoice? invoice = await _appDbContext.Invoices
+                .Include(y => y.Customer)
+                .Include(x => x.Product)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if(invoice == null)
+                return null;
+
+            return invoice;
         }
 
         public async Task AddInvoice(Invoice invoice)

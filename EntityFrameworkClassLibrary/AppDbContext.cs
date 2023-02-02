@@ -24,11 +24,11 @@ namespace EntityFrameworkClassLibrary
         //(Da capire perchè non la prende con GetEnvironementVariable, ma devo passarla esplicita per far funzionare migrazione)
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-                string connectionString = Environment.GetEnvironmentVariable("ConnectionString");
-                optionsBuilder.UseSqlServer(connectionString);
-            }
+        //    if (!optionsBuilder.IsConfigured)
+        //    {
+        //        string connectionString = Environment.GetEnvironmentVariable("ConnectionString");
+        //        optionsBuilder.UseSqlServer(connectionString);
+        //    }
         }
 
         //Creazione del modello di relazione tra le tabelle del database
