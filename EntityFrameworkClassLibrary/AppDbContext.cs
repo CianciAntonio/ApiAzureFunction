@@ -1,5 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using EntityFrameworkClassLibrary.Models;
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
+using Microsoft.Extensions.Configuration;
+using System.ComponentModel;
 
 namespace EntityFrameworkClassLibrary
 {
@@ -22,13 +26,17 @@ namespace EntityFrameworkClassLibrary
 
         //Meteodo attraverso il quale definisco connection string per connessione al database
         //(Da capire perchè non la prende con GetEnvironementVariable, ma devo passarla esplicita per far funzionare migrazione)
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-        //    if (!optionsBuilder.IsConfigured)
-        //    {
-        //        string connectionString = Environment.GetEnvironmentVariable("ConnectionString");
-        //        optionsBuilder.UseSqlServer(connectionString);
-        //    }
+            var kvaultUrl = Environment.GetEnvironmentVariable("VaultUri");
+            var secretClient = new SecretClient(new Uri(kvaultUrl), new DefaultAzureCredential());
+            var secret = secretClient.GetSecret("AzureConnectionString-AC").Value.Value;
+
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer(secret);
+            }
         }
 
         //Creazione del modello di relazione tra le tabelle del database

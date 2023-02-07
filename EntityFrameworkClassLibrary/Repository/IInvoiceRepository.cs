@@ -7,7 +7,7 @@ namespace EntityFrameworkClassLibrary.Repository
         Task<IEnumerable<Invoice>> GetAllInvoices();
         Task<Invoice> GetInvoiceById(int id);
         Task AddInvoice(Invoice invoice);
-        Task<string> RemoveInvoiceById(int id);
-        Task<string> UpdateInvoice(Invoice invoice);
+        void UpdateInvoice(Invoice invoice);
+        void RemoveInvoice(Invoice invoice);
     }
 }

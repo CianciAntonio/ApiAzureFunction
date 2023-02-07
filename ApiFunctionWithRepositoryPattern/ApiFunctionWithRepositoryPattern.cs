@@ -9,7 +9,6 @@ using Newtonsoft.Json;
 using EntityFrameworkClassLibrary.Models;
 using EntityFrameworkClassLibrary.Repository;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
-using EntityFrameworkClassLibrary.UnitOfWork;
 
 //Attributo in cui dico alla funzione di caricare la classe Startup all'avvio del programma
 [assembly: FunctionsStartup(typeof(ApiFunctionWithRepositoryPattern.Startup))]
@@ -18,12 +17,11 @@ namespace ApiFunctionWithRepositoryPattern
 { 
     public class ApiFunctionWithRepositoryPattern
     {
-        //Dependency Injection della UnitOfWork
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IService _service;
 
-        public ApiFunctionWithRepositoryPattern(IUnitOfWork unitOfWork)
+        public ApiFunctionWithRepositoryPattern(IService service)
         {
-            _unitOfWork = unitOfWork;
+            _service = service;
         }
 
         [FunctionName("GetAllCustomers")]
@@ -33,9 +31,7 @@ namespace ApiFunctionWithRepositoryPattern
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            var customers = await _unitOfWork.customer.GetAllCustomers();
-            _unitOfWork.Dispose();
-
+            var customers = await _service.GetAllCustomers();
             return new OkObjectResult(customers);
         }
 
@@ -46,10 +42,8 @@ namespace ApiFunctionWithRepositoryPattern
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            var customers = await _unitOfWork.customer.GetCustomerById(id);
-            _unitOfWork.Dispose();
-
-            return new OkObjectResult(customers);
+            var customer = await _service.GetCustomerById(id);
+            return new OkObjectResult(customer);
         }
 
         [FunctionName("AddCustomer")]
@@ -60,11 +54,9 @@ namespace ApiFunctionWithRepositoryPattern
             log.LogInformation("C# HTTP trigger function processed a request.");
 
             var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic newCustomer = JsonConvert.DeserializeObject<Customer>(requestBody);
+            Customer newCustomer = JsonConvert.DeserializeObject<Customer>(requestBody);
 
-            await _unitOfWork.customer.AddCustomer(newCustomer);
-            await _unitOfWork.Save();
-            _unitOfWork.Dispose();
+            await _service.AddCustomer(newCustomer);
 
             return new OkObjectResult("Customer Added!");
         }
@@ -77,13 +69,11 @@ namespace ApiFunctionWithRepositoryPattern
             log.LogInformation("C# HTTP trigger function processed a request.");
 
             var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic newCustomer = JsonConvert.DeserializeObject<Customer>(requestBody);
+            Customer newCustomer = JsonConvert.DeserializeObject<Customer>(requestBody);
 
-            string message = await _unitOfWork.customer.UpdateCustomer(newCustomer);
-            await _unitOfWork.Save();
-            _unitOfWork.Dispose();
+            var result = await _service.UpdateCustomer(newCustomer);
 
-            return new OkObjectResult(message);
+            return new OkObjectResult(result);
         }
 
         [FunctionName("DeleteCustomerById")]
@@ -93,11 +83,9 @@ namespace ApiFunctionWithRepositoryPattern
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            string message = await _unitOfWork.customer.RemoveCostomerById(id);
-            await _unitOfWork.Save();
-            _unitOfWork.Dispose();
+            await _service.RemoveCustomer(id);
 
-            return new OkObjectResult(message);
+            return new OkObjectResult("Customer Removed");
         }
 
         [FunctionName("GetAllInvoices")]
@@ -107,8 +95,7 @@ namespace ApiFunctionWithRepositoryPattern
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            var invoices = await _unitOfWork.invoice.GetAllInvoices();
-            _unitOfWork.Dispose();
+            var invoices = await _service.GetAllInvoices();
 
             return new OkObjectResult(invoices);
         }
@@ -120,8 +107,7 @@ namespace ApiFunctionWithRepositoryPattern
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            var invoice = await _unitOfWork.invoice.GetInvoiceById(id);
-            _unitOfWork.Dispose();
+            var invoice = await _service.GetInvoiceById(id);
 
             return new OkObjectResult(invoice);
         }
@@ -136,9 +122,7 @@ namespace ApiFunctionWithRepositoryPattern
             var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic newInvoice = JsonConvert.DeserializeObject<Invoice>(requestBody);
 
-            await _unitOfWork.invoice.AddInvoice(newInvoice);
-            await _unitOfWork.Save();
-            _unitOfWork.Dispose();
+            await _service.AddInvoice(newInvoice);
 
             return new OkObjectResult("Invoice added!");
         }
@@ -153,9 +137,7 @@ namespace ApiFunctionWithRepositoryPattern
             var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic newInvoice = JsonConvert.DeserializeObject<Invoice>(requestBody);
 
-            string message = await _unitOfWork.invoice.UpdateInvoice(newInvoice);
-            await _unitOfWork.Save();
-            _unitOfWork.Dispose();
+            string message = await _service.UpdateInvoice(newInvoice);
 
             return new OkObjectResult(message);
         }
@@ -167,11 +149,9 @@ namespace ApiFunctionWithRepositoryPattern
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            string message = await _unitOfWork.invoice.RemoveInvoiceById(id);
-            await _unitOfWork.Save();
-            _unitOfWork.Dispose();
+            await _service.RemoveInvoice(id);
 
-            return new OkObjectResult(message);
+            return new OkObjectResult("Invoice Removed");
         }
 
         [FunctionName("AddProduct")]
@@ -184,9 +164,7 @@ namespace ApiFunctionWithRepositoryPattern
             var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic newProduct = JsonConvert.DeserializeObject<Product>(requestBody);
 
-            await _unitOfWork.product.AddProduct(newProduct);
-            await _unitOfWork.Save();
-            _unitOfWork.Dispose();
+            await _service.AddProduct(newProduct);
 
             return new OkObjectResult("Product added!");
         }
@@ -198,11 +176,9 @@ namespace ApiFunctionWithRepositoryPattern
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            string message = await _unitOfWork.product.RemoveProductById(id);
-            await _unitOfWork.Save();
-            _unitOfWork.Dispose();
+            await _service.RemoveProduct(id);
 
-            return new OkObjectResult(message);
+            return new OkObjectResult("Product Removed");
         }
 
         #region DEPENDENCY INJECTION (NO UoW)

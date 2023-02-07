@@ -5,7 +5,7 @@ namespace EntityFrameworkClassLibrary.Repository
 {
     public class InvoiceRepository : Repository<Invoice>, IInvoiceRepository
     {
-        private AppDbContext _appDbContext;
+        private readonly AppDbContext _appDbContext;
 
         public InvoiceRepository(AppDbContext context) : base(context)
         {
@@ -15,6 +15,7 @@ namespace EntityFrameworkClassLibrary.Repository
         public async Task<IEnumerable<Invoice>> GetAllInvoices()
         {
             var invoice = await _appDbContext.Invoices
+                .AsNoTracking() // Regalo da Loris: studiare perché ottimizza le query
                 .Include(y => y.Customer)
                 .Include(x => x.Product)
                 .ToListAsync();
@@ -25,12 +26,10 @@ namespace EntityFrameworkClassLibrary.Repository
         public async Task<Invoice> GetInvoiceById(int id)
         {
             Invoice invoice = await _appDbContext.Invoices
+                .AsNoTracking() // Regalo da Loris: studiare perché ottimizza le query
                 .Include(y => y.Customer)
                 .Include(x => x.Product)
                 .FirstOrDefaultAsync(x => x.Id == id);
-
-            if(invoice == null)
-                return null;
 
             return invoice;
         }
@@ -40,30 +39,29 @@ namespace EntityFrameworkClassLibrary.Repository
             await _appDbContext.Invoices.AddAsync(invoice);
         }
 
-        public async Task<string> RemoveInvoiceById(int id)
+        public void RemoveInvoice(Invoice invoice)
         {
-            var dbInvoice = await _appDbContext.Invoices.FindAsync(id);
-
-            if (dbInvoice == null)
-                return "Id Not Found!";
-
-            _appDbContext.Remove(dbInvoice);
-            return "Invoice Removed!";
+            _appDbContext.Invoices.Remove(invoice);
         }
 
-        public async Task<string> UpdateInvoice(Invoice invoice)
+        //public async Task<string> UpdateInvoice(Invoice invoice)
+        //{
+        //    Invoice dbInvoice = await _appDbContext.Invoices.FindAsync(invoice.Id);
+
+        //    if (dbInvoice == null)
+        //        return "Id Not Found";
+
+        //    dbInvoice.OrderDate = invoice.OrderDate;
+        //    dbInvoice.Quantity = invoice.Quantity;
+        //    dbInvoice.Price = invoice.Price;
+        //    dbInvoice.CustomerId = invoice.CustomerId;
+        //    _appDbContext.Invoices.Update(dbInvoice);
+        //    return "Invoice Updated";
+        //}
+
+        public void UpdateInvoice(Invoice invoice)
         {
-            Invoice dbInvoice = await _appDbContext.Invoices.FindAsync(invoice.Id);
-
-            if (dbInvoice == null)
-                return "Id Not Found";
-
-            dbInvoice.OrderDate = invoice.OrderDate;
-            dbInvoice.Quantity = invoice.Quantity;
-            dbInvoice.Price = invoice.Price;
-            dbInvoice.CustomerId = invoice.CustomerId;
-            _appDbContext.Invoices.Update(dbInvoice);
-            return "Invoice Updated";
+            _appDbContext.Invoices.Update(invoice);
         }
     }
 }

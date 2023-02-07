@@ -1,12 +1,15 @@
-﻿using EntityFrameworkClassLibrary;
+﻿using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
+using EntityFrameworkClassLibrary;
 using EntityFrameworkClassLibrary.UnitOfWork;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Text.Json.Serialization;
 
-[assembly: FunctionsStartup(typeof(ApiFunctionWithRepositoryPattern.Startup))]
+//[assembly: FunctionsStartup(typeof(ApiFunctionWithRepositoryPattern.Startup))]
 
 namespace ApiFunctionWithRepositoryPattern
 {
@@ -14,13 +17,6 @@ namespace ApiFunctionWithRepositoryPattern
     {  
         public override void Configure(IFunctionsHostBuilder service)
         {
-            //Meteodo alternativo per risolvere errore loop con System.Text.Json
-            //service.Services.AddControllers().AddJsonOptions(opts =>
-            //                                    {
-            //                                        opts.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
-            //                                        opts.JsonSerializerOptions.PropertyNamingPolicy = null;
-            //                                    });
-
             //Evita l'errore di loop
             service.Services.AddControllers().AddNewtonsoftJson(options =>
             {
@@ -29,10 +25,10 @@ namespace ApiFunctionWithRepositoryPattern
 
             //Dependency Injection basata su Scoped
             service.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            service.Services.AddScoped<IService, Service>();
 
             //Creazione del contesto del database
-            string connectionString = Environment.GetEnvironmentVariable("ConnectionString");
-            service.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
+            service.Services.AddDbContext<AppDbContext>();
         }
     }
 }

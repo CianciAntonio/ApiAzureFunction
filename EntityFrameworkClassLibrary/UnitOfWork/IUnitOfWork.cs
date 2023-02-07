@@ -4,9 +4,9 @@ namespace EntityFrameworkClassLibrary.UnitOfWork
 {
     public interface IUnitOfWork : IDisposable
     {
-        ICustomerRepository customer { get; }
-        IInvoiceRepository invoice { get; }
-        IProductRepository product { get; }
+        ICustomerRepository CustomerRepository { get; }
+        IInvoiceRepository InvoiceRepository { get; }
+        IProductRepository ProductRepository { get; }
         Task Save();
         void Dispose();
     }
