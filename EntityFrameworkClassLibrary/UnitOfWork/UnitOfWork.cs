@@ -20,9 +20,9 @@ namespace EntityFrameworkClassLibrary.UnitOfWork
         //Non è consigliabile salvare le modifiche nelle repository, meglio creare il metodo nella unitofwork e richiamarlo nella funzione
         //Questo perchè viola il principio di separazione delle responsabilità. La repository è responsabile della gestione delle entità,
         //mentre l'Unit of Work è responsabile della gestione delle transazioni e delle modifiche apportate alle entità.
-        public Task Save()
+        public async Task Save()
         {
-            return _appDbContext.SaveChangesAsync();
+            await _appDbContext.SaveChangesAsync();
         }
 
         //Permette di liberare risorse gestite (esempio connessioni al database) che sono state allocate durante l'utilizzo del contesto.

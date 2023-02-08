@@ -1,15 +1,7 @@
-﻿using Azure.Identity;
-using Azure.Security.KeyVault.Secrets;
-using EntityFrameworkClassLibrary;
+﻿using EntityFrameworkClassLibrary;
 using EntityFrameworkClassLibrary.UnitOfWork;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Text.Json.Serialization;
-
-//[assembly: FunctionsStartup(typeof(ApiFunctionWithRepositoryPattern.Startup))]
 
 namespace ApiFunctionWithRepositoryPattern
 {

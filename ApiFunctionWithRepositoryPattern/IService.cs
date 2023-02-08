@@ -16,13 +16,13 @@ namespace ApiFunctionWithRepositoryPattern
         Task<Customer> GetCustomerById(int id);
         Task AddCustomer(Customer customer);
         Task<Customer> UpdateCustomer(Customer customer);
-        Task RemoveCustomer(int id);
+        Task<Customer> RemoveCustomer(int id);
         Task<IEnumerable<Invoice>> GetAllInvoices();
         Task<Invoice> GetInvoiceById(int id);
         Task AddInvoice(Invoice invoice);
         Task<Invoice> UpdateInvoice(Invoice invoice);
-        Task RemoveInvoice(int id);
+        Task<Invoice> RemoveInvoice(int id);
         Task AddProduct(Product product);
-        Task RemoveProduct(int id);
+        Task<Product> RemoveProduct(int id);
     }
 }

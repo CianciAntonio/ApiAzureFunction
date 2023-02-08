@@ -44,21 +44,6 @@ namespace EntityFrameworkClassLibrary.Repository
             _appDbContext.Invoices.Remove(invoice);
         }
 
-        //public async Task<string> UpdateInvoice(Invoice invoice)
-        //{
-        //    Invoice dbInvoice = await _appDbContext.Invoices.FindAsync(invoice.Id);
-
-        //    if (dbInvoice == null)
-        //        return "Id Not Found";
-
-        //    dbInvoice.OrderDate = invoice.OrderDate;
-        //    dbInvoice.Quantity = invoice.Quantity;
-        //    dbInvoice.Price = invoice.Price;
-        //    dbInvoice.CustomerId = invoice.CustomerId;
-        //    _appDbContext.Invoices.Update(dbInvoice);
-        //    return "Invoice Updated";
-        //}
-
         public void UpdateInvoice(Invoice invoice)
         {
             _appDbContext.Invoices.Update(invoice);

@@ -15,6 +15,7 @@ namespace EntityFrameworkClassLibrary.Repository
         public async Task<IEnumerable<Customer>> GetAllCustomers()
         {
             var customers = await _appDbContext.Customers
+                .AsNoTracking()
                 .Include(y => y.Invoices)
                 .ThenInclude(x => x.Product)
                 .ToListAsync();
@@ -25,6 +26,7 @@ namespace EntityFrameworkClassLibrary.Repository
         public async Task<Customer> GetCustomerById(int id)
         {
             Customer customer = await _appDbContext.Customers
+                .AsNoTracking()
                 .Include(y => y.Invoices)
                 .ThenInclude(x => x.Product)
                 .FirstOrDefaultAsync(x => x.Id == id);

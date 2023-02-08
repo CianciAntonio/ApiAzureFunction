@@ -5,6 +5,7 @@ namespace EntityFrameworkClassLibrary.Repository
     public interface IProductRepository : IRepository<Product>
     {
         Task AddProduct(Product product);
-        Task RemoveProduct(int id);
+        Task<Product> GetProduct(int id);
+        void RemoveProduct(Product product);
     }
 }

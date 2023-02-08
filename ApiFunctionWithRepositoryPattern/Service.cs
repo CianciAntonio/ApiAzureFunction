@@ -8,8 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-[assembly: FunctionsStartup(typeof(ApiFunctionWithRepositoryPattern.Startup))]
-
 namespace ApiFunctionWithRepositoryPattern
 {
     public class Service : IService
@@ -23,29 +21,23 @@ namespace ApiFunctionWithRepositoryPattern
 
         public async Task<IEnumerable<Customer>> GetAllCustomers()
         {
-            IEnumerable<Customer> customers = null;
-            try
-            {
-                customers = await _unitOfWork.CustomerRepository.GetAllCustomers();
-            }
-            catch(NullReferenceException)
-            {
-                Console.WriteLine("Null");
-            }
+            var customers = await _unitOfWork.CustomerRepository.GetAllCustomers();
+
+            if (customers == null)
+                return null;
+
+            _unitOfWork.Dispose();
             return customers;
         }
 
         public async Task<Customer> GetCustomerById(int id)
         {
-            Customer customer = null;
-            //try
-            //{
-                customer = await _unitOfWork.CustomerRepository.GetCustomerById(id);
-            //}
-            //catch(NullReferenceException)
-            //{
-            //    Console.WriteLine("Null");
-            //}
+            Customer customer = await _unitOfWork.CustomerRepository.GetCustomerById(id);
+
+            if (customer == null)
+                return null;
+
+            _unitOfWork.Dispose();
             return customer;
         }
 
@@ -73,48 +65,40 @@ namespace ApiFunctionWithRepositoryPattern
             return dbCustomer;
         }
 
-        public async Task RemoveCustomer(int id)
+        public async Task<Customer> RemoveCustomer(int id)
         {
-            try
-            {
-                var dbCustomer = await _unitOfWork.CustomerRepository.GetCustomerById(id);
+            Customer dbCustomer = await _unitOfWork.CustomerRepository.GetCustomerById(id);
 
-                _unitOfWork.CustomerRepository.RemoveCustomer(dbCustomer);
-                await _unitOfWork.Save();
-                _unitOfWork.Dispose();
-            }
-            catch (NullReferenceException ex)
-            {
-                throw new Exception("error", ex);
-            }
+            if (dbCustomer == null)
+                return null;
+
+            _unitOfWork.CustomerRepository.RemoveCustomer(dbCustomer);
+            await _unitOfWork.Save();
+            _unitOfWork.Dispose();
+
+            return dbCustomer;        
         }
 
         public async Task<IEnumerable<Invoice>> GetAllInvoices()
         {
-            try
-            {
-                var invoices = await _unitOfWork.InvoiceRepository.GetAllInvoices();
-                _unitOfWork.Dispose();
-                return invoices;
-            }
-            catch(NullReferenceException ex)
-            {
-                throw new Exception("error", ex);
-            }
+            var invoices = await _unitOfWork.InvoiceRepository.GetAllInvoices();
+
+            if(invoices == null)
+                return null;
+            
+            _unitOfWork.Dispose();
+            return invoices;       
         }
 
         public async Task<Invoice> GetInvoiceById(int id)
         {
-            try
-            {
-                var invoice = await _unitOfWork.InvoiceRepository.GetInvoiceById(id);
-                _unitOfWork.Dispose();
-                return invoice;
-            }
-            catch (NullReferenceException e)
-            {
-                throw new Exception("error", e);
-            }
+            var invoice = await _unitOfWork.InvoiceRepository.GetInvoiceById(id);
+
+            if (invoice == null)
+                return null;
+
+            _unitOfWork.Dispose();
+            return invoice;
         }
 
         public async Task AddInvoice(Invoice invoice)
@@ -126,42 +110,35 @@ namespace ApiFunctionWithRepositoryPattern
 
         public async Task<Invoice> UpdateInvoice(Invoice invoice)
         {
-            Invoice dbInvoice = await _unitOfWork.InvoiceRepository.GetInvoiceById(invoice.Id);     
-            
-            try
-            {
-                dbInvoice.OrderDate = invoice.OrderDate;
-                dbInvoice.Quantity = invoice.Quantity;
-                dbInvoice.Price = invoice.Price;
-                dbInvoice.CustomerId = invoice.CustomerId;
+            Invoice dbInvoice = await _unitOfWork.InvoiceRepository.GetInvoiceById(invoice.Id);
 
-                _unitOfWork.InvoiceRepository.UpdateInvoice(dbInvoice);
+            if (dbInvoice == null)
+                return null;
 
-                await _unitOfWork.Save();
-                _unitOfWork.Dispose();
-            }
-            catch(NullReferenceException ex) 
-            {
-                throw new Exception("error", ex);
-            }
+            dbInvoice.OrderDate = invoice.OrderDate;
+            dbInvoice.Quantity = invoice.Quantity;
+            dbInvoice.Price = invoice.Price;
+            dbInvoice.CustomerId = invoice.CustomerId;
+            _unitOfWork.InvoiceRepository.UpdateInvoice(dbInvoice);
+
+            await _unitOfWork.Save();
+            _unitOfWork.Dispose();
 
             return invoice;
         }
 
-        public async Task RemoveInvoice(int id)
+        public async Task<Invoice> RemoveInvoice(int id)
         {
-            try
-            {
-                var dbInvoice = await _unitOfWork.InvoiceRepository.GetInvoiceById(id);
+            var dbInvoice = await _unitOfWork.InvoiceRepository.GetInvoiceById(id);
 
-                _unitOfWork.InvoiceRepository.RemoveInvoice(dbInvoice);
-                await _unitOfWork.Save();
-                _unitOfWork.Dispose();
-            }
-            catch(NullReferenceException ex)
-            {
-                throw new Exception("error", ex);
-            }
+            if(dbInvoice == null)
+                return null;
+
+            _unitOfWork.InvoiceRepository.RemoveInvoice(dbInvoice);
+            await _unitOfWork.Save();
+            _unitOfWork.Dispose();
+            
+            return dbInvoice;
         }
 
         public async Task AddProduct(Product product)
@@ -171,18 +148,17 @@ namespace ApiFunctionWithRepositoryPattern
             _unitOfWork.Dispose();
         }
 
-        public async Task RemoveProduct(int id)
+        public async Task<Product> RemoveProduct(int id)
         {
-            try
-            {
-                await _unitOfWork.ProductRepository.RemoveProduct(id);
-                await _unitOfWork.Save();
-                _unitOfWork.Dispose();
-            }
-            catch (NullReferenceException ex)
-            {
-                throw new Exception("error", ex);
-            }
+            Product dbProduct = await _unitOfWork.ProductRepository.GetProduct(id);
+
+            if(dbProduct==null)
+                return null;
+            _unitOfWork.ProductRepository.RemoveProduct(dbProduct);
+            await _unitOfWork.Save();
+            _unitOfWork.Dispose();
+
+            return dbProduct;
         }
     }
 }
