@@ -37,19 +37,6 @@ namespace EntityFrameworkClassLibrary.Repository
             await _appDbContext.Customers.AddAsync(customer);
         }
 
-        //public async Task<string> UpdateCustomer(Customer customer)
-        //{
-        //    Customer dbCustomer = await _appDbContext.Customers.FindAsync(customer.Id);
-
-        //    if (dbCustomer == null)
-        //        return "Id Not Found";
-
-        //    dbCustomer.Name = customer.Name;
-        //    dbCustomer.LastName = customer.LastName;
-        //    _appDbContext.Customers.Update(dbCustomer);
-        //    return "Customer Updated!";
-        //}
-
         public void UpdateCustomer(Customer customer)
         {
             _appDbContext.Customers.Update(customer);

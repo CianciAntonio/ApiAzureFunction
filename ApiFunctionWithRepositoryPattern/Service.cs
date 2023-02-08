@@ -1,5 +1,7 @@
 ﻿using EntityFrameworkClassLibrary.Models;
 using EntityFrameworkClassLibrary.UnitOfWork;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.WindowsAzure.Storage.Queue;
 using System;
@@ -21,28 +23,30 @@ namespace ApiFunctionWithRepositoryPattern
 
         public async Task<IEnumerable<Customer>> GetAllCustomers()
         {
+            IEnumerable<Customer> customers = null;
             try
             {
-                var customers = await _unitOfWork.CustomerRepository.GetAllCustomers();
-                return customers;
+                customers = await _unitOfWork.CustomerRepository.GetAllCustomers();
             }
-            catch(Exception ex)
+            catch(NullReferenceException)
             {
-                throw new Exception("Empty Database", ex);
+                Console.WriteLine("Null");
             }
+            return customers;
         }
 
         public async Task<Customer> GetCustomerById(int id)
         {
-            try
-            {
-                var customer = await _unitOfWork.CustomerRepository.GetCustomerById(id);
-                return customer;
-            }
-            catch(NullReferenceException ex)
-            {
-                throw new Exception(id +" id not found",ex);
-            }
+            Customer customer = null;
+            //try
+            //{
+                customer = await _unitOfWork.CustomerRepository.GetCustomerById(id);
+            //}
+            //catch(NullReferenceException)
+            //{
+            //    Console.WriteLine("Null");
+            //}
+            return customer;
         }
 
         public async Task AddCustomer(Customer customer)
@@ -56,19 +60,16 @@ namespace ApiFunctionWithRepositoryPattern
         {
             Customer dbCustomer = await _unitOfWork.CustomerRepository.GetCustomerById(customer.Id);
 
-            try
-            {
-                dbCustomer.Name = customer.Name;
-                dbCustomer.LastName = customer.LastName;
-                _unitOfWork.CustomerRepository.UpdateCustomer(dbCustomer);
+            if (dbCustomer == null)
+                return null;
+            
+            dbCustomer.Name = customer.Name;
+            dbCustomer.LastName = customer.LastName;
+            _unitOfWork.CustomerRepository.UpdateCustomer(dbCustomer);
 
-                await _unitOfWork.Save();
-                _unitOfWork.Dispose();
-            }
-            catch (NullReferenceException ex)
-            {
-                throw new Exception("error", ex);
-            }
+            await _unitOfWork.Save();
+            _unitOfWork.Dispose();
+            
             return dbCustomer;
         }
 

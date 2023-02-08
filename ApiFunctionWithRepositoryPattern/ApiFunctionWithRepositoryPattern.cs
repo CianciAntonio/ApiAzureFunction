@@ -137,9 +137,9 @@ namespace ApiFunctionWithRepositoryPattern
             var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic newInvoice = JsonConvert.DeserializeObject<Invoice>(requestBody);
 
-            string message = await _service.UpdateInvoice(newInvoice);
+            await _service.UpdateInvoice(newInvoice);
 
-            return new OkObjectResult(message);
+            return new OkObjectResult("Invoice Updated");
         }
 
         [FunctionName("DeleteInvoiceById")]
