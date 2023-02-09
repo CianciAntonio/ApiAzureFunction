@@ -2,6 +2,10 @@
 using EntityFrameworkClassLibrary.Models;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
+using Microsoft.Extensions.Azure;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore;
+using Microsoft.Extensions.Configuration;
 
 namespace EntityFrameworkClassLibrary
 {
@@ -27,7 +31,13 @@ namespace EntityFrameworkClassLibrary
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            var kvaultUrl = Environment.GetEnvironmentVariable("VaultUri");
+            var configuration = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .Build();
+            var kvaultUrl = configuration.GetValue<string>("VaultUri");
+            //var kvaultUrl = Environment.GetEnvironmentVariable("VaultUri");
+            //Environment.SetEnvironmentVariable("VaultUri", kvaultUrl, EnvironmentVariableTarget.User);
+
             var secretClient = new SecretClient(new Uri(kvaultUrl), new DefaultAzureCredential());
             var secret = secretClient.GetSecret("AzureConnectionString-AC").Value.Value;
 
