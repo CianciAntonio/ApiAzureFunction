@@ -33,7 +33,7 @@ namespace EntityFrameworkClassLibrary.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("SurName")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 

@@ -55,7 +55,7 @@ namespace ApiFunctionWithRepositoryPattern
             if (dbCustomer == null)
                 return null;
             
-            dbCustomer.Name = customer.Name;
+            dbCustomer.SurName = customer.SurName;
             dbCustomer.LastName = customer.LastName;
             _unitOfWork.CustomerRepository.UpdateCustomer(dbCustomer);
 

@@ -2,10 +2,8 @@
 using EntityFrameworkClassLibrary.Models;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
-using Microsoft.Extensions.Azure;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore.Design;
 
 namespace EntityFrameworkClassLibrary
 {
@@ -29,23 +27,21 @@ namespace EntityFrameworkClassLibrary
         //Meteodo attraverso il quale definisco connection string per connessione al database
         //(Da capire perchè non la prende con GetEnvironementVariable, ma devo passarla esplicita per far funzionare migrazione)
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            var configuration = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .Build();
-            var kvaultUrl = configuration.GetValue<string>("VaultUri");
-            //var kvaultUrl = Environment.GetEnvironmentVariable("VaultUri");
-            //Environment.SetEnvironmentVariable("VaultUri", kvaultUrl, EnvironmentVariableTarget.User);
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    if (!optionsBuilder.IsConfigured)
+        //    {
+        //    //var configuration = new ConfigurationBuilder()
+        //    //    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+        //    //    .Build();
+        //    //var kvaultUrl = configuration.GetValue<string>("VaultUri");
+        //    var kvaultUrl = Environment.GetEnvironmentVariable("VaultUri");
 
-            var secretClient = new SecretClient(new Uri(kvaultUrl), new DefaultAzureCredential());
-            var secret = secretClient.GetSecret("AzureConnectionString-AC").Value.Value;
-
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer(secret);
-            }
-        }
+        //    var secretClient = new SecretClient(new Uri(kvaultUrl), new DefaultAzureCredential());
+        //    var secret = secretClient.GetSecret("AzureConnectionString-AC").Value.Value;
+        //        optionsBuilder.UseSqlServer(secret);
+        //    }
+        //}
 
         //Creazione del modello di relazione tra le tabelle del database
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -54,7 +50,7 @@ namespace EntityFrameworkClassLibrary
             {
                 entity.ToTable("Customer");
                 entity.Property(e => e.LastName).HasMaxLength(50);
-                entity.Property(e => e.Name).HasMaxLength(50);
+                entity.Property(e => e.SurName).HasMaxLength(50);
             });
 
             modelBuilder.Entity<Customer>()

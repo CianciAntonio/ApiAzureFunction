@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EntityFrameworkClassLibrary.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230209143431_Test2")]
-    partial class Test2
+    [Migration("20230210110256_CustomerSurName")]
+    partial class CustomerSurName
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -35,7 +35,7 @@ namespace EntityFrameworkClassLibrary.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("SurName")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
