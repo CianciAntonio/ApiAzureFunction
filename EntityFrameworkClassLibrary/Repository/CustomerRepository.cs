@@ -1,5 +1,6 @@
 ﻿using EntityFrameworkClassLibrary.Models;
 using Microsoft.EntityFrameworkCore;
+using Dtos;
 
 namespace EntityFrameworkClassLibrary.Repository
 {

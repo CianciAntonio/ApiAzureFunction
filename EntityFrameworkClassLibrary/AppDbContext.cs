@@ -24,25 +24,6 @@ namespace EntityFrameworkClassLibrary
         public virtual DbSet<Invoice> Invoices { get; set; }
         public virtual DbSet<Product> Product { get; set; }
 
-        //Meteodo attraverso il quale definisco connection string per connessione al database
-        //(Da capire perchè non la prende con GetEnvironementVariable, ma devo passarla esplicita per far funzionare migrazione)
-
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    if (!optionsBuilder.IsConfigured)
-        //    {
-        //    //var configuration = new ConfigurationBuilder()
-        //    //    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-        //    //    .Build();
-        //    //var kvaultUrl = configuration.GetValue<string>("VaultUri");
-        //    var kvaultUrl = Environment.GetEnvironmentVariable("VaultUri");
-
-        //    var secretClient = new SecretClient(new Uri(kvaultUrl), new DefaultAzureCredential());
-        //    var secret = secretClient.GetSecret("AzureConnectionString-AC").Value.Value;
-        //        optionsBuilder.UseSqlServer(secret);
-        //    }
-        //}
-
         //Creazione del modello di relazione tra le tabelle del database
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
