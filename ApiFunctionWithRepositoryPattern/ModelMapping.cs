@@ -12,17 +12,23 @@ namespace ApiFunctionWithRepositoryPattern
         {        
             config.ForType<Customer, CustomerResponse>()
                 .Map(dest => dest.FullName, src => $"{src.SurName} {src.LastName}")
-                .Map(dest => dest.Invoices, src => src.Invoices);
+                .Map(dest => dest.Invoices, src => src.Invoices)
+                .Map(dest => dest.CreatedDate, src => src.CreatedDate)
+                .Map(dest => dest.UpdatedDate, src => src.UpdatedDate);
 
             config.ForType<Invoice, InvoiceResponse>()
                 .Map(dest => dest.Order, src => $"{src.Quantity} product/s costing {src.Price}€ on {src.OrderDate}")
                 .Map(dest => dest.ProductDescription, src => src.Product)
                 .Map(dest => dest.IdCustomer, src => src.CustomerId)
-                .Map(dest => dest.Customer, src => $"{src.Customer.SurName} {src.Customer.LastName}");
+                .Map(dest => dest.Customer, src => $"{src.Customer.SurName} {src.Customer.LastName}")
+                .Map(dest => dest.CreatedDate, src => src.CreatedDate)
+                .Map(dest => dest.UpdatedDate, src => src.UpdatedDate); ;
 
             config.ForType<Product, ProductResponse>()
                 .Map(dest => dest.Product, src => $"{src.ProductName}, {src.ProductDescription} in category {src.ProductCategory}")
-                .Map(dest => dest.IdInvoice, src => src.InvoiceId);
+                .Map(dest => dest.IdInvoice, src => src.InvoiceId)
+                .Map(dest => dest.CreatedDate, src => src.CreatedDate)
+                .Map(dest => dest.UpdatedDate, src => src.UpdatedDate);
             
             config.ForType<CustomerRequest, Customer>();
             config.ForType<InvoiceRequest, Invoice>();

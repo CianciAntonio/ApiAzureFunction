@@ -19,14 +19,14 @@ namespace ApiFunctionWithRepositoryPattern
     {
         public override void Configure(IFunctionsHostBuilder builder)
         {
-            //Configurazione per mapster
+            //Configurazione di mapster
             var config = TypeAdapterConfig.GlobalSettings;
             config.Scan(Assembly.GetExecutingAssembly());
 
             builder.Services.AddSingleton(config);
             builder.Services.AddScoped<IMapper, ServiceMapper>();
 
-            //Configurazione per Swagger
+            //Configurazione di Swagger
             builder.Services.AddSwashBuckle(Assembly.GetExecutingAssembly(), opts => {
                 opts.AddCodeParameter = true;
                 opts.Documents = new[] {

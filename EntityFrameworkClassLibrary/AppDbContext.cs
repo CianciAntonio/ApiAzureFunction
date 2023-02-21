@@ -1,9 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using EntityFrameworkClassLibrary.Models;
-using Azure.Identity;
-using Azure.Security.KeyVault.Secrets;
-using Microsoft.Extensions.Configuration;
-using Microsoft.EntityFrameworkCore.Design;
 
 namespace EntityFrameworkClassLibrary
 {
@@ -65,5 +61,30 @@ namespace EntityFrameworkClassLibrary
             OnModelCreatingPartial(modelBuilder);
         }
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            AddTimeStamps();
+            return await base.SaveChangesAsync(cancellationToken);
+        }
+
+        private void AddTimeStamps()
+        {
+            var entries = ChangeTracker
+                .Entries()
+                .Where(e => e.Entity is Timestamp && (
+                        e.State == EntityState.Added
+                        || e.State == EntityState.Modified));
+
+            foreach (var entityEntry in entries)
+            {
+                ((Timestamp)entityEntry.Entity).UpdatedDate = DateTime.Now;
+
+                if (entityEntry.State == EntityState.Added)
+                {
+                    ((Timestamp)entityEntry.Entity).CreatedDate = DateTime.Now;
+                }
+            }
+        }
     }
 }

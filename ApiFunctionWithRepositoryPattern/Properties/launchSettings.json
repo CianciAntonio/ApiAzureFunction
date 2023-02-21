@@ -3,7 +3,9 @@
     "ApiFunctionWithRepositoryPattern": {
       "commandName": "Project",
       "commandLineArgs": "--port 7130",
-      "launchBrowser": false
+      "launchBrowser": true,
+      "launchUrl": "swagger/ui/swagger/ui",
+      "applicationUrl": "http://localhost:7130"
     }
   }
 }

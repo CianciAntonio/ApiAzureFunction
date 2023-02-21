@@ -2,17 +2,20 @@
 using EntityFrameworkClassLibrary.UnitOfWork;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Mapster;
 using Dtos.CustomerResponse;
 using Dtos.ModelRequest;
 using MapsterMapper;
+using Polly.Retry;
+using Polly;
+using System.Net.Http;
+using System;
 
 namespace ApiFunctionWithRepositoryPattern.LogicBusiness
 {
     public class Service : IService
     {
-        public IUnitOfWork _unitOfWork { get; set; }
-        public IMapper _mapper { get; set; }
+        public IUnitOfWork _unitOfWork;
+        public IMapper _mapper;
 
         public Service(IUnitOfWork unitOfWork, IMapper mapper)
         {
@@ -24,7 +27,10 @@ namespace ApiFunctionWithRepositoryPattern.LogicBusiness
         {
             Customer customer = _mapper.Map<Customer>(customerReq);
 
-            await _unitOfWork.CustomerRepository.AddCustomer(customer);
+            //await _unitOfWork.CustomerRepository.AddCustomer(customer);
+            await ExceptionPolicy.retryPolicy.ExecuteAsync(async () =>
+                await _unitOfWork.CustomerRepository.AddCustomer(customer));
+
             await _unitOfWork.Save();
             _unitOfWork.Dispose();
         }
@@ -32,8 +38,11 @@ namespace ApiFunctionWithRepositoryPattern.LogicBusiness
         public async Task<List<CustomerResponse>> GetAllCustomers()
         {
             List<CustomerResponse> customersDto = new List<CustomerResponse>();
-            var customers = await _unitOfWork.CustomerRepository.GetAllCustomers();
+            //var customers = await _unitOfWork.CustomerRepository.GetAllCustomers();
 
+            IEnumerable<Customer> customers = await ExceptionPolicy.retryPolicy.ExecuteAsync(async () =>
+                    await _unitOfWork.CustomerRepository.GetAllCustomers());
+                
             if (customers == null)
                 return null;
 
@@ -50,7 +59,10 @@ namespace ApiFunctionWithRepositoryPattern.LogicBusiness
 
         public async Task<CustomerResponse> GetCustomerById(int id)
         {
-            Customer customer = await _unitOfWork.CustomerRepository.GetCustomerById(id);
+            //Customer customer = await _unitOfWork.CustomerRepository.GetCustomerById(id);
+
+            Customer customer = await ExceptionPolicy.retryPolicy.ExecuteAsync(async () =>
+                await _unitOfWork.CustomerRepository.GetCustomerById(id));
 
             if (customer == null)
                 return null;
@@ -71,7 +83,10 @@ namespace ApiFunctionWithRepositoryPattern.LogicBusiness
 
             dbCustomer.SurName = customerReq.SurName;
             dbCustomer.LastName = customerReq.LastName;
-            _unitOfWork.CustomerRepository.UpdateCustomer(dbCustomer);
+
+            //_unitOfWork.CustomerRepository.UpdateCustomer(dbCustomer);
+            await ExceptionPolicy.retryPolicy.ExecuteAsync(async () =>
+                _unitOfWork.CustomerRepository.UpdateCustomer(dbCustomer));
 
             await _unitOfWork.Save();
             _unitOfWork.Dispose();
@@ -88,7 +103,10 @@ namespace ApiFunctionWithRepositoryPattern.LogicBusiness
             if (dbCustomer == null)
                 return null;
 
-            _unitOfWork.CustomerRepository.RemoveCustomer(dbCustomer);
+            //_unitOfWork.CustomerRepository.RemoveCustomer(dbCustomer);
+            await ExceptionPolicy.retryPolicy.ExecuteAsync(async () =>
+                _unitOfWork.CustomerRepository.RemoveCustomer(dbCustomer));
+
             await _unitOfWork.Save();
             _unitOfWork.Dispose();
 

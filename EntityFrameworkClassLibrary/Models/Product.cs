@@ -1,7 +1,7 @@
 ﻿
 namespace EntityFrameworkClassLibrary.Models
 {
-    public class Product
+    public class Product : Timestamp
     {
         public int Id { get; set; }
         public string ProductName { get; set; }

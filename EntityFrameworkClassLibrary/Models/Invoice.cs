@@ -1,7 +1,7 @@
 ﻿
 namespace EntityFrameworkClassLibrary.Models
 {
-    public class Invoice
+    public class Invoice : Timestamp
     {
         public int Id { get; set; }
         public string OrderDate { get; set; }
